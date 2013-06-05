@@ -1,0 +1,213 @@
+\section{Terminal Symbole}
+\label{sec:terminal_symbole}
+Da die Sprache Blöcke durch die Anzahl führender Leerzeichen auf einer Programmzeile erkennt, mussten die zwei Terminal Symbole ``START\_BLOCK'' und ``END\_BLOCK'' eingeführt werden. Diese werden durch den Lexer automatisch eingefügt, wenn sich die Anzahl Lehrzeichen verändert. Weiterhin hat die Sprache reservierte Schlüsselwörter welche in Tabelle~\ref{tab:reserved_keywords} aufgeführt sind.
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{ll}
+  \toprule
+    Zeichen & Symbolbezeichnung\\
+  \midrule
+    if & IF \\
+  \hline
+    nop & NOP \\
+  \hline
+    print & PRINT \\
+  \hline
+    for & FOR \\
+  \hline
+    in & IN \\
+  \bottomrule
+  \end{tabular}
+  \caption{Reservierte Schlüsselwörter}
+  \label{tab:reserved_keywords}
+\end{table}
+
+Weiterhin wurden die in Tabelle~\ref{tab:single_char_terminals} ersichtlichen terminal Symbole definiert welche jeweils nur aus einem Zeichen bestehen.
+Diese terminal Symbole werden in den folgenden BNF Darstellungen jeweils durch ihre Zeichenrepresentation und nicht durch den Symbolnamen ausgedrückt. 
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{ll}
+  \toprule
+    Zeichen & Symbolbezeichnung\\
+  \midrule
+    . & DOT \\
+  \hline
+    + & PLUS \\
+  \hline
+    - & MINUS \\
+  \hline
+    * & TIMES \\
+  \hline
+    / & DIVIDE \\
+  \hline
+    ( & LPAREN \\
+  \hline
+    ) & RPAREN \\
+  \hline
+    [ & LSPAREN \\
+  \hline
+    ] & RSPAREN \\
+  \hline
+    , & COMMA \\
+  \hline
+    \textbackslash n & NEWLINE \\
+  \bottomrule
+  \end{tabular}
+  \caption{Einzeichen terminal Symbole}
+  \label{tab:single_char_terminals}
+\end{table}
+
+Zusätzlich zu den erwähnten Terminalsymbolen gibt es noch verschiedene Zuweisungsoperatoren (Tabelle~\ref{tab:assign}) und Symbole wie ``STRING'', ``NUMBER'' oder ``NAME'' welche vom Lexer erkannt werden.
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{ll}
+  \toprule
+    Zeichen & Bedeutung\\
+  \midrule
+    = & eifache Zuweisung \\
+  \hline
+    += & Addition zu einer Variablen \\
+  \hline
+    -= & Subtraktion von einer Variablen \\
+  \hline
+    *= & Multiplikation einer Variablen \\
+  \hline
+    /= & Division einer Variablen \\
+  \bottomrule
+  \end{tabular}
+  \caption{ASSIGN Symbole}
+  \label{tab:assign}
+\end{table}
+
+\pagebreak
+
+\section{Nicht terminal Symbole}
+\label{sec:nicht_terminal_symbole}
+\subsubsection{Statement und Statement Listen}
+\label{ssub:statement_und_statement_listen}
+\begin{grammar}
+<statement\_list> ::= <statement\_list> `\\n' <statement>
+\alt <statement>
+\end{grammar}
+
+Das äusserste Element nach dem Parsen eines Scripts ist immer ``statement\_list''. Eine ``statement\_list'' besteht aus einem oder mehreren ``statement''. Bei mehreren sind diese jeweils durch einen Zeilenschlag voneinander getrennt.
+
+\begin{grammar}
+<statement> ::= <assignment>
+\alt <if_statement>
+\alt <for_statement>
+\alt <nop>
+\alt <print>  
+\end{grammar}
+
+Ein Statement besteht jeweils aus genau einem weiteren nicht terminal Symbol.
+
+\subsection{Zuweisung}
+\label{sub:zuweisung}
+
+\begin{grammar}
+<assignment> ::= <variable> <ASSIGN> <expr>
+\end{grammar}
+
+Variablen müssen nicht explizit initialisiert werden. Durch eine Zuweisung kann eine Variable implizit erstellt werden. Globale Variablen können ``Read only'' sein. Falls man versuch auf sie zu schreiben wird eine Fehlermeldung ausgegeben.
+
+\subsubsection{Beispiel}
+
+\begin{lstlisting}
+a = b
+\end{lstlisting}
+
+\subsection{for-Schleife}
+\label{sub:for_schleife}
+
+\begin{grammar}
+  <for\_statement> ::= `for' <NAME> `in' <expr> `\\n' <START\_BLOCK> <statement\_list> <END\_BLOCK>
+\end{grammar}
+
+\subsubsection{Beispiel}
+
+\begin{lstlisting}
+for a in b
+    print a
+\end{lstlisting}
+
+\subsection{If-Bedinung}
+\label{sub:if_bedinung}
+
+\begin{grammar}
+<if-statement> ::= `if' <expr> `\\n' <START_BLOCK> <statement_list> <END_BLOCK>
+\end{grammar}
+
+\subsubsection{Beispiel}
+\begin{lstlisting}
+if a == 1
+    print "Bedingung erfuellt"
+\end{lstlisting}
+
+\subsection{Listen}
+\label{sub:listen}
+\begin{grammar}
+<list> ::= `[' <list_inner> `]'
+\end{grammar}
+\begin{grammar}
+<list\_inner> ::= <list\_part>
+\alt <list\_inner> `,' <list\_part>
+\end{grammar}
+\begin{grammar}
+<list\_part> ::= <NUMBER>
+\alt <STRING>
+\alt <variable>
+\end{grammar}
+
+Listen verhalten sich wie Arrays und können nur Ganzzahlen beinhalten.
+
+\begin{lstlisting}
+  a = [1, 2, 3]
+\end{lstlisting}
+
+\subsection{Mathematische Ausdrücke}
+\label{sub:mathematische_ausdrücke}
+
+\begin{grammar}
+<expr> ::= <term>
+\alt <expr> `+' <term>
+\alt <expr> `-' <term>
+\end{grammar}
+
+\begin{grammar}
+<term> ::= <term> `*' <factor>
+\alt <term> `/' <factor>
+\alt <factor>
+\end{grammar}
+
+\begin{grammar}
+<factor> ::= <NUMBER>
+\alt <STRING>
+\alt <list>
+\alt <variable>
+\alt <result>
+\alt `(' <expr> `)'
+\end{grammar}
+
+Um die korrekte Auswertung eines mathematischen Ausdrucks gemäss der Präzedenz der verwendeten Operatoren zu erreichen, wurde hier ein dreistufiger Aufbau von Regeln verwendet. So besteht das Symbol ``expr'' immer aus einer Addition oder Subtraktion von einer ``expr'' mit einem ``term'' oder nur aus einem ``term''. ``term'' wiederum besteht aus einer Multiplikation oder Division eines ``term'' mit einem ``factor'' oder nur einem ``factor''. Ein ``factor'' hingegen kann aus einem ``string'', ``list'', ``variable'', ``result'' oder wiederum einer ``expr'' welche in Klammern steht bestehen.
+
+\begin{grammar}
+<nop> ::= `nop'
+\end{grammar}
+
+\begin{grammar}
+<variable> ::= <NAME>
+\alt <variable> `.' <NAME>
+\alt <variable> `[' <expr> `]'
+\end{grammar}
+
+\begin{grammar}
+<result> ::= <variable> `(' <list\_inner> `)'
+\end{grammar}
+
+\begin{grammar}
+<print> ::= `print' <expr>
+\end{grammar}

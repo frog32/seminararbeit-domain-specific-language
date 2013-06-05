@@ -1,0 +1,21 @@
+\section{PLY}
+\label{sec:ply}
+Um den Lexer und den Parser zu implementieren, wurde PLY~\footnote{\url{http://www.dabeaz.com/ply/}} verwendet. PLY ist eine Impementation von Lex und Yacc in Python. Es wird jeweils zuerst ein Lexer konfiguriert, welcher die Sprache in einzelne Tokens unterteilt. Da die Sprache Blöcke anhand des Zeileneinzuges erkennt, musste der Parser so modifiziert werden, dass er bei einer Vergrösserung des Einzuges ein zusätzliches ``START\_BLOCK'' Token und bei einer Verringerung ein ``END\_BLOCK'' Token generiert.
+
+Der Lexer erzeugt einen Stream von Tokens, auf welchen danach der Parser arbeitet. Er versucht die Ableitungsregeln, welche er als BNF Notation bekommt auf den Stream anzuwenden und so einen sinnvollen Parsebaum zu erzeugen.
+
+\begin{lstlisting}
+def p_if_statement(p):
+    '''if_statement : IF expr NEWLINE START_BLOCK statement_list END_BLOCK'''
+    p[0] = language.If(p[2], p[5])
+\end{lstlisting}
+
+Mit PLY werden Regeln für den Parser als Funktion umgesetzt. Der Docstring der Funktion enthält jeweils die Regel in einer BNF ähnlichen Notation. Falls die Regel eingesetzt wird, wird die Funktion aufgerufen. Der einzige Parameter `p' ist indexierbar und enthält alle Symbole welche auf der rechten Seite der Regel stehen in den Indizes 1 bis n. In den Index 0 sollte dann das Resultat geschrieben werden.
+
+\section{Interpreter}
+\label{sec:interpreter}
+Der Interpreter enthält den zu interpretierenden Programmcode als String. Er verwendet den Parser um daraus einen Baum aus Objekten zu erstellen. Auf dem Objekt an der Wurzel des Baumes führt der Interpreter dann die Methode ``evaluate'' aus und gibt ihr ein Environment mit. Auf diesem Environment wird dann der Programmcode ausgeführt.
+
+\section{Environment}
+\label{sec:environment}
+Das Environment auf dem der Interpreter ein Script ausführt, kann im einfachsten Fall ein assoziatives Array sein. Für einige Funktionen der Sprache ist es aber von Vorteil, wenn das Environment wie ein Stack verschiedene Kontexte übereinander stapeln kann. Weiterhin bietet das implementierte Environment die Möglichkeit Systemvariabeln zu erstellen.

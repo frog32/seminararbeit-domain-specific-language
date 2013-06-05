@@ -1,0 +1,34 @@
+%!TEX root = ../index.tex
+\section{Ausgangslage}
+\label{sec:Ausgangslage}
+Die Webseite \url{http://frog32.ch} enthält eine Komponente, welche in Echtzeit allen Benutzern die Mauszeiger-Position sämtlicher Benutzer anzeigt. Dieser Echtzeitdienst wurde mit dem Twisted Framework erstellt und besitzt einen eingebauten Jabber Bot, über welchen zur Entwicklung notwendige Daten bezogen werden können und sich der Dienst steuern lässt.
+
+\section{Ziel der Arbeit}
+\label{sec:Ziel der Arbeit}
+Der erwähnte Jabber Bot versteht zur Zeit nur zwei Befehle. Für eine einfachere Integration zukünftiger Funktionalität sollen diese Befehle durch eine Domain Specific Language ersetzt werden. Mit dieser Sprache soll eine direkte Interaktion mit bestimmten Variablen des Dienstes möglich sein.
+
+\section{Aufgabenstellung}
+
+\label{sec:Aufgabenstellung}
+Es soll eine DSL entworfen werden, welche folgenden Ansprüchen genügt:
+
+\begin{enumerate}
+  \item Es soll die Möglichkeit bestehen, Systemvariablen zu registrieren, welche dann in der DSL benutzt werden können.
+  \item Die Syntax für Schleifen und Bedingungen soll ohne ``end'' Tokens auskommen. Als Beispiel soll die Programmiersprache Python dienen.
+  \item Die Sprache soll so aufgebaut sein, dass sie in einer interaktiven Shell zum Einsatz kommen kann.
+\end{enumerate}
+
+Zu dieser DSL soll ein Interpreter programmiert werden, welcher diese Sprache ausführen kann.
+
+\section{Erwartete Resultate}
+\label{sec:Erwartete Resultate}
+
+\begin{itemize}
+  \item DSL mit einer Beschreibung der Syntax
+  \item Integration der DSL in einen Prototyp der Webseite
+  \item Technischer Kurzbericht
+\end{itemize}
+
+\section{Geplante Termine}
+\label{sec:Geplante Termine}
+Präsentation ZHAW
